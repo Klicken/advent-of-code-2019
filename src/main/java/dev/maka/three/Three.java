@@ -2,19 +2,20 @@ package dev.maka.three;
 
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Three {
     public static void main(String[] args) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/main/java/dev/maka/three/input.txt")))) {
-            ArrayList<Set<Point>> wireList = new ArrayList<>();
+            ArrayList<HashMap<Point, Integer>> wireList = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null) {
-                Set<Point> wire = new HashSet<>();
+                HashMap<Point, Integer> wire = new HashMap<>();
                 int x = 0;
                 int y = 0;
+                int wireDistance = 0;
                 for (String s : line.split(",")) {
                     String[] vector = s.split("(?<=\\D)");
                     String direction = vector[0];
@@ -35,22 +36,19 @@ public class Three {
                                 break;
                         }
                         Point p = new Point(x, y);
-                        wire.add(p);
+                        wire.put(p, ++wireDistance);
                     }
                 }
                 wireList.add(wire);
             }
-            Set<Point> intersection = wireList.get(0);
-            for (Set<Point> set : wireList) {
-                intersection.retainAll(set);
+            Set<Point> intersections = wireList.get(0).keySet();
+            intersections.retainAll(wireList.get(1).keySet());
+
+            ArrayList<Integer> distances = new ArrayList<>();
+            for (Point p : intersections) {
+                distances.add(wireList.get(0).get(p) + wireList.get(1).get(p));
             }
-            int shortest = Integer.MAX_VALUE;
-            for (Point p : intersection) {
-                int distance = p.x + p.y;
-                if (distance < shortest)
-                    shortest = distance;
-            }
-            System.out.println("Shortest manhattan distance: " + shortest);
+            System.out.println("Fewest combined steps: " + Collections.min(distances));
         }
     }
 }
