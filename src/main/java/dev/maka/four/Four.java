@@ -12,14 +12,14 @@ public class Four {
 
     public static void main(String[] args) {
 
-        ArrayList<Integer> possiblePasswords = new ArrayList<>();
+        int possiblePasswords = 0;
         for (int password = min; password <= max; password++) {
             if(matchesCriteria(password)) {
-                possiblePasswords.add(password);
+                possiblePasswords++;
             }
         }
 
-        System.out.println("Possible passwords: "+ possiblePasswords.size());
+        System.out.println("Possible passwords: "+ possiblePasswords);
     }
 
     private static boolean matchesCriteria(int password) {
